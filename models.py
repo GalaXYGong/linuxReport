@@ -13,7 +13,6 @@ class Records(Base):
     __tablename__ = "records"
     id = mapped_column(Integer, primary_key=True)
     host_id = mapped_column(Integer, ForeignKey("hosts.id"), nullable=False)
-    package_name = mapped_column(String(250), nullable=False)
     file_timestamp = mapped_column(DateTime, nullable=False)
     date_added = mapped_column(DateTime, nullable=False, default=func.now())
 
