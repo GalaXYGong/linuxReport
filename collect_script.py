@@ -3,7 +3,14 @@ from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base, Hosts, Records, Packages
-ENGINE = create_engine("sqlite:///version_database.db")
+
+# configurations
+WORKING_DIR = pathlib.Path("./")  # set this to the directory where the CSV files are located
+DATABASE="version_database.db"
+db_path = (WORKING_DIR / DATABASE).absolute()
+
+ENGINE = create_engine(f"sqlite:///{db_path}")
+
 
 def make_session():
     Session = sessionmaker(bind=ENGINE)
@@ -23,6 +30,11 @@ def collect_one_report(file_path):
             host = Hosts(hostname=host_name)
             session.add(host)
             session.flush()
+        # check if the same report has been imported before, if yes, skip it
+        existing_record = session.query(Records).filter_by(host_id=host.id, file_timestamp=dt_obj).first()
+        if existing_record:
+            print(f"report from {host_name} with timestamp {report_time_str} has already been imported, skipping...")
+            return
         # create a new record for this report
         print(f"importing records from {host_name}, timestamp: {report_time_str}")
         new_record = Records(
@@ -55,8 +67,11 @@ def collect_one_report(file_path):
         session.close()
 
 
-file_path= "./wujie_20260412_225222.csv"
-collect_one_report(file_path)
+# file_path= "./wujie_20260412_225222.csv"
+# collect_one_report(file_path)
 
-# iterate through all csv files in the current directory and import them
-# one file can only be imported once, if the same file is imported again, it will be skipped
+if __name__ == "__main__":
+    # iterate through all csv files in the current directory and import them
+    for file in os.listdir(WORKING_DIR):
+        if file.endswith(".csv"):
+            collect_one_report(file)
