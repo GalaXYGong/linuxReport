@@ -1,10 +1,12 @@
-import pathlib
+import pathlib, yaml
 from models import Base, Packages
 from sqlalchemy import create_engine
 
 # configurations
-WORKING_DIR = pathlib.Path("./")  # set this to the directory where the CSV files are located
-DATABASE="version_database.db"
+with open('app_conf.yml', 'r') as f:
+    app_config = yaml.safe_load(f.read())
+WORKING_DIR = pathlib.Path(app_config['working_dir'])
+DATABASE=app_config['database']
 db_path = (WORKING_DIR / DATABASE).absolute()
 
 ENGINE = create_engine(f"sqlite:///{db_path}")

@@ -1,12 +1,14 @@
-import csv, pathlib, os
+import csv, pathlib, os, yaml
 from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base, Hosts, Records, Packages
 
 # configurations
-WORKING_DIR = pathlib.Path("./")  # set this to the directory where the CSV files are located
-DATABASE="version_database.db"
+with open('app_conf.yml', 'r') as f:
+    app_config = yaml.safe_load(f.read())
+WORKING_DIR = pathlib.Path(app_config['working_dir'])
+DATABASE=app_config['database']
 db_path = (WORKING_DIR / DATABASE).absolute()
 
 ENGINE = create_engine(f"sqlite:///{db_path}")
@@ -65,10 +67,6 @@ def collect_one_report(file_path):
         print(f"write failed: {e}")
     finally:
         session.close()
-
-
-# file_path= "./wujie_20260412_225222.csv"
-# collect_one_report(file_path)
 
 if __name__ == "__main__":
     # iterate through all csv files in the current directory and import them
