@@ -2,3 +2,5 @@ version: 1
 working_dir: "./"
 report_dir: "reports"
 database: "version_database.db"
+report_retention_days: 30
+keep_latest_reports: 5

@@ -75,3 +75,12 @@ if __name__ == "__main__":
         if file.endswith(".csv"):
             file_path = REPORT_DIR / file
             collect_one_report(file_path)
+
+
+# if you want to test the script, you can run the following command in the terminal:
+# python collect_script.py
+
+# todo:
+# 1. add error handling and logging
+# 2. add trimming of old records if the database grows too large
+# 3. add delete script to delete report files after they are imported for a certain period of time (e.g. 30 days)
