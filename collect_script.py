@@ -73,4 +73,5 @@ if __name__ == "__main__":
     # iterate through all csv files in the current directory and import them
     for file in os.listdir(REPORT_DIR):
         if file.endswith(".csv"):
-            collect_one_report(file)
+            file_path = REPORT_DIR / file
+            collect_one_report(file_path)
