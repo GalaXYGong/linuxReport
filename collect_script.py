@@ -10,6 +10,7 @@ with open('app_conf.yml', 'r') as f:
 WORKING_DIR = pathlib.Path(app_config['working_dir'])
 DATABASE=app_config['database']
 db_path = (WORKING_DIR / DATABASE).absolute()
+REPORT_DIR = pathlib.Path(WORKING_DIR/app_config['report_dir']).absolute()
 
 ENGINE = create_engine(f"sqlite:///{db_path}")
 
@@ -70,6 +71,6 @@ def collect_one_report(file_path):
 
 if __name__ == "__main__":
     # iterate through all csv files in the current directory and import them
-    for file in os.listdir(WORKING_DIR):
+    for file in os.listdir(REPORT_DIR):
         if file.endswith(".csv"):
             collect_one_report(file)
